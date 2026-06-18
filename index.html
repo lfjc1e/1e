@@ -1432,7 +1432,80 @@ body.anti-sleep-active {
 </head>
 
 <body>
+<!-- =========================================================== -->
+<!-- === PROFESSIONAL LOADING SCREEN WITH COUNTDOWN & WELCOME === -->
+<!-- =========================================================== -->
+<script>
+    (function() {
+        // Random delay between 5 and 45 seconds
+        const waitTime = Math.floor(Math.random() * 41) + 5;
+        console.log(`⏳ Delay: ${waitTime} seconds`);
 
+        // Create the loading screen overlay
+        const loading = document.createElement('div');
+        loading.id = 'delay-loading';
+        loading.style.cssText = `
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(145deg, #E6E6FA, #af82ba);
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            z-index: 999999; font-family: 'SF Pro Display', Arial, sans-serif; 
+            color: #4B0082; text-align: center; padding: 20px;
+        `;
+        loading.innerHTML = `
+            <div style="max-width: 500px;">
+                <!-- Welcome Note -->
+                <h1 style="font-size: 2.8em; margin-bottom: 10px; color: #4B0082;">
+                    🎓 Welcome to LFJC
+                </h1>
+                <p style="font-size: 1.2em; color: #5a2d82; margin-bottom: 30px;">
+                    Please wait while we prepare your exam...
+                </p>
+                
+                <!-- Spinner -->
+                <div style="width: 60px; height: 60px; border: 5px solid #f3f3f3; 
+                            border-top: 5px solid #4B0082; border-radius: 50%; 
+                            animation: spin 1s linear infinite; margin: 20px auto;">
+                </div>
+                
+                <!-- Countdown Timer -->
+                <p style="font-size: 1.5em; font-weight: bold; margin-top: 20px;">
+                    ⏳ <span id="delay-timer">${waitTime}</span> seconds remaining
+                </p>
+                <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                    Do not refresh the page
+                </p>
+            </div>
+        `;
+        document.body.appendChild(loading);
+
+        // Add spin animation
+        const style = document.createElement('style');
+        style.textContent = `@keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }`;
+        document.head.appendChild(style);
+
+        // Countdown timer
+        let seconds = waitTime;
+        const timer = document.getElementById('delay-timer');
+        const interval = setInterval(() => {
+            seconds--;
+            if (timer) timer.textContent = seconds;
+            if (seconds <= 0) clearInterval(interval);
+        }, 1000);
+
+        // After delay, remove loading screen and show your page
+        setTimeout(() => {
+            const el = document.getElementById('delay-loading');
+            if (el) el.remove();
+            console.log('✅ Delay complete. Your exam page is now visible.');
+        }, waitTime * 1000);
+    })();
+</script>
+<!-- =========================================================== -->
+<!-- === END LOADING SCREEN                                    === -->
+<!-- =========================================================== -->
 <!-- =========================================================== -->
 <!-- === CORRECTED STAGGERED START SYSTEM (No Reload Loop)    === -->
 <!-- =========================================================== -->
