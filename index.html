@@ -1434,33 +1434,26 @@ body.anti-sleep-active {
 <body>
 
 <!-- =========================================================== -->
-<!-- === NEW: Automatic Delay System (Adds Random Traffic Stagger) === -->
-<!-- =========================================================== -->
-<script>
-   <!-- =========================================================== -->
-<!-- === RANDOM DELAY SYSTEM WITH PASSWORD SCREEN CONTROL       === -->
+<!-- === STAGGERED START SYSTEM (Prevents Initial Request Spike) === -->
 <!-- =========================================================== -->
 <script>
     // ========================================
-    // 1. RANDOM DELAY BEFORE SHOWING CONTENT
+    // 1. GENERATE A STAGGERED REDIRECT TIME
     // ========================================
-    const minDelay = 5000;   // 5 seconds (minimum wait)
-    const maxDelay = 30000;  // 30 seconds (maximum wait)
-    const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    const minStart = 5;   // Minimum wait in seconds
+    const maxStart = 45;  // Maximum wait in seconds (increased to 45)
+    const waitTime = Math.floor(Math.random() * (maxStart - minStart + 1)) + minStart;
     
-    console.log(`⏳ Automatic delay set to ${delay/1000} seconds.`);
+    console.log(`⏳ Staggered start: Page will load in ${waitTime} seconds.`);
     
     // ========================================
-    // 2. HIDE THE ENTIRE PAGE CONTENT INITIALLY
+    // 2. SHOW A FULL-PAGE "PLEASE WAIT" SCREEN
     // ========================================
     document.documentElement.style.display = 'none';
     
-    // ========================================
-    // 3. SHOW A LOADING SCREEN
-    // ========================================
-    const loadingDiv = document.createElement('div');
-    loadingDiv.id = 'initial-loading-screen';
-    loadingDiv.style.cssText = `
+    const waitScreen = document.createElement('div');
+    waitScreen.id = 'wait-screen';
+    waitScreen.style.cssText = `
         position: fixed;
         top: 0;
         left: 0;
@@ -1474,16 +1467,18 @@ body.anti-sleep-active {
         z-index: 999999;
         font-family: 'SF Pro Display', Arial, sans-serif;
         color: #4B0082;
+        text-align: center;
+        padding: 20px;
     `;
-    loadingDiv.innerHTML = `
-        <div style="text-align: center; padding: 20px;">
-            <h1 style="font-size: 2.5em; margin-bottom: 20px;">⏳ Loading Exam</h1>
+    waitScreen.innerHTML = `
+        <div style="max-width: 500px;">
+            <h1 style="font-size: 2.5em; margin-bottom: 20px;">⏳ Please Wait</h1>
             <div style="width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #4B0082; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;"></div>
-            <p style="font-size: 1.2em; margin-top: 20px;">Please wait, your exam will start in <span id="initial-timer">${Math.floor(delay/1000)}</span> seconds...</p>
-            <p style="font-size: 0.9em; color: #666;">Do not refresh the page.</p>
+            <p style="font-size: 1.2em; margin-top: 20px;">Your exam will load in <span id="wait-timer">${waitTime}</span> seconds...</p>
+            <p style="font-size: 0.9em; color: #666; margin-top: 10px;">Do not refresh the page.</p>
         </div>
     `;
-    document.body.appendChild(loadingDiv);
+    document.body.appendChild(waitScreen);
     
     // Add spin animation
     const styleSheet = document.createElement('style');
@@ -1491,10 +1486,10 @@ body.anti-sleep-active {
     document.head.appendChild(styleSheet);
     
     // ========================================
-    // 4. COUNTDOWN TIMER
+    // 3. COUNTDOWN TIMER
     // ========================================
-    let secondsLeft = Math.floor(delay / 1000);
-    const timerElement = document.getElementById('initial-timer');
+    let secondsLeft = waitTime;
+    const timerElement = document.getElementById('wait-timer');
     
     const countdownInterval = setInterval(() => {
         secondsLeft--;
@@ -1505,20 +1500,23 @@ body.anti-sleep-active {
     }, 1000);
     
     // ========================================
-    // 5. AFTER DELAY, SHOW THE ACTUAL PAGE
+    // 4. AFTER DELAY, RELOAD THE PAGE (This is the key)
     // ========================================
     setTimeout(() => {
-        // Remove loading screen
-        if (loadingDiv.parentNode) {
-            loadingDiv.parentNode.removeChild(loadingDiv);
+        // Remove the wait screen
+        if (waitScreen.parentNode) {
+            waitScreen.parentNode.removeChild(waitScreen);
         }
         // Show the actual page
         document.documentElement.style.display = '';
-        console.log('✅ Delay complete. Page is now visible.');
-    }, delay);
+        console.log('✅ Staggered start complete. Page is now visible.');
+        
+        // Trigger a clean page load
+        window.location.reload();
+    }, waitTime * 1000);
 </script>
 <!-- =========================================================== -->
-<!-- === END: RANDOM DELAY SYSTEM                              === -->
+<!-- === END: STAGGERED START SYSTEM                           === -->
 <!-- =========================================================== -->
 <script>
     // Class lock check - redirects if class is locked
