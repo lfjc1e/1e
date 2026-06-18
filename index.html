@@ -1437,6 +1437,10 @@ body.anti-sleep-active {
 <!-- === NEW: Automatic Delay System (Adds Random Traffic Stagger) === -->
 <!-- =========================================================== -->
 <script>
+   <!-- =========================================================== -->
+<!-- === RANDOM DELAY SYSTEM WITH PASSWORD SCREEN CONTROL       === -->
+<!-- =========================================================== -->
+<script>
     // ========================================
     // 1. RANDOM DELAY BEFORE SHOWING CONTENT
     // ========================================
@@ -1444,15 +1448,78 @@ body.anti-sleep-active {
     const maxDelay = 30000;  // 30 seconds (maximum wait)
     const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
     
-    // Store the delay in a global variable so other scripts can access it if needed
-    window.autoDelay = delay;
+    console.log(`⏳ Automatic delay set to ${delay/1000} seconds.`);
     
-    console.log(`⏳ Automatic delay set to ${delay/1000} seconds to reduce traffic spikes.`);
+    // ========================================
+    // 2. HIDE THE ENTIRE PAGE CONTENT INITIALLY
+    // ========================================
+    document.documentElement.style.display = 'none';
+    
+    // ========================================
+    // 3. SHOW A LOADING SCREEN
+    // ========================================
+    const loadingDiv = document.createElement('div');
+    loadingDiv.id = 'initial-loading-screen';
+    loadingDiv.style.cssText = `
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(145deg, #E6E6FA, #af82ba);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 999999;
+        font-family: 'SF Pro Display', Arial, sans-serif;
+        color: #4B0082;
+    `;
+    loadingDiv.innerHTML = `
+        <div style="text-align: center; padding: 20px;">
+            <h1 style="font-size: 2.5em; margin-bottom: 20px;">⏳ Loading Exam</h1>
+            <div style="width: 60px; height: 60px; border: 5px solid #f3f3f3; border-top: 5px solid #4B0082; border-radius: 50%; animation: spin 1s linear infinite; margin: 20px auto;"></div>
+            <p style="font-size: 1.2em; margin-top: 20px;">Please wait, your exam will start in <span id="initial-timer">${Math.floor(delay/1000)}</span> seconds...</p>
+            <p style="font-size: 0.9em; color: #666;">Do not refresh the page.</p>
+        </div>
+    `;
+    document.body.appendChild(loadingDiv);
+    
+    // Add spin animation
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`;
+    document.head.appendChild(styleSheet);
+    
+    // ========================================
+    // 4. COUNTDOWN TIMER
+    // ========================================
+    let secondsLeft = Math.floor(delay / 1000);
+    const timerElement = document.getElementById('initial-timer');
+    
+    const countdownInterval = setInterval(() => {
+        secondsLeft--;
+        if (timerElement) timerElement.textContent = secondsLeft;
+        if (secondsLeft <= 0) {
+            clearInterval(countdownInterval);
+        }
+    }, 1000);
+    
+    // ========================================
+    // 5. AFTER DELAY, SHOW THE ACTUAL PAGE
+    // ========================================
+    setTimeout(() => {
+        // Remove loading screen
+        if (loadingDiv.parentNode) {
+            loadingDiv.parentNode.removeChild(loadingDiv);
+        }
+        // Show the actual page
+        document.documentElement.style.display = '';
+        console.log('✅ Delay complete. Page is now visible.');
+    }, delay);
 </script>
 <!-- =========================================================== -->
-<!-- === END: Automatic Delay System                            === -->
+<!-- === END: RANDOM DELAY SYSTEM                              === -->
 <!-- =========================================================== -->
-
 <script>
     // Class lock check - redirects if class is locked
     (function() {
