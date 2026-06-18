@@ -1434,14 +1434,14 @@ body.anti-sleep-active {
 <body>
 
 <!-- =========================================================== -->
-<!-- === STAGGERED START SYSTEM (Prevents Initial Request Spike) === -->
+<!-- === CORRECTED STAGGERED START SYSTEM (No Reload Loop)    === -->
 <!-- =========================================================== -->
 <script>
     // ========================================
-    // 1. GENERATE A STAGGERED REDIRECT TIME
+    // 1. GENERATE A STAGGERED START TIME
     // ========================================
     const minStart = 5;   // Minimum wait in seconds
-    const maxStart = 45;  // Maximum wait in seconds (increased to 45)
+    const maxStart = 45;  // Maximum wait in seconds
     const waitTime = Math.floor(Math.random() * (maxStart - minStart + 1)) + minStart;
     
     console.log(`⏳ Staggered start: Page will load in ${waitTime} seconds.`);
@@ -1449,7 +1449,8 @@ body.anti-sleep-active {
     // ========================================
     // 2. SHOW A FULL-PAGE "PLEASE WAIT" SCREEN
     // ========================================
-    document.documentElement.style.display = 'none';
+    // Hide the body content initially
+    document.body.style.display = 'none';
     
     const waitScreen = document.createElement('div');
     waitScreen.id = 'wait-screen';
@@ -1500,23 +1501,20 @@ body.anti-sleep-active {
     }, 1000);
     
     // ========================================
-    // 4. AFTER DELAY, RELOAD THE PAGE (This is the key)
+    // 4. AFTER DELAY, SHOW THE PAGE (NO RELOAD)
     // ========================================
     setTimeout(() => {
         // Remove the wait screen
         if (waitScreen.parentNode) {
             waitScreen.parentNode.removeChild(waitScreen);
         }
-        // Show the actual page
-        document.documentElement.style.display = '';
+        // Show the body content
+        document.body.style.display = '';
         console.log('✅ Staggered start complete. Page is now visible.');
-        
-        // Trigger a clean page load
-        window.location.reload();
     }, waitTime * 1000);
 </script>
 <!-- =========================================================== -->
-<!-- === END: STAGGERED START SYSTEM                           === -->
+<!-- === END: CORRECTED STAGGERED START SYSTEM                === -->
 <!-- =========================================================== -->
 <script>
     // Class lock check - redirects if class is locked
