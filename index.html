@@ -1512,7 +1512,7 @@ body.anti-sleep-active {
     (function() {
         // Get class name from URL or page
         const className = '2M'; // Change this for each class!
-        const LOCK_CONFIG_URL = 'https://raw.githubusercontent.com/lfjccbt/lock/main/locks.json';
+        const LOCK_CONFIG_URL = 'locks.json?t=' + Date.now();
         
         async function checkLockAndRedirect() {
             try {
@@ -1573,7 +1573,7 @@ body.anti-sleep-active {
 // Load config from GitHub
 async function loadExamConfig() {
     const className = window.location.pathname.split('/')[1] || '1D';
-    const url = `https://raw.githubusercontent.com/lfjccbt/${className}/main/config.json?t=${Date.now()}`;
+    const url = `config.json?t=${Date.now()}`;
     
     try {
         const res = await fetch(url);
