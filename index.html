@@ -1432,6 +1432,27 @@ body.anti-sleep-active {
 </head>
 
 <body>
+
+<!-- =========================================================== -->
+<!-- === NEW: Automatic Delay System (Adds Random Traffic Stagger) === -->
+<!-- =========================================================== -->
+<script>
+    // ========================================
+    // 1. RANDOM DELAY BEFORE SHOWING CONTENT
+    // ========================================
+    const minDelay = 5000;   // 5 seconds (minimum wait)
+    const maxDelay = 30000;  // 30 seconds (maximum wait)
+    const delay = Math.floor(Math.random() * (maxDelay - minDelay + 1)) + minDelay;
+    
+    // Store the delay in a global variable so other scripts can access it if needed
+    window.autoDelay = delay;
+    
+    console.log(`⏳ Automatic delay set to ${delay/1000} seconds to reduce traffic spikes.`);
+</script>
+<!-- =========================================================== -->
+<!-- === END: Automatic Delay System                            === -->
+<!-- =========================================================== -->
+
 <script>
     // Class lock check - redirects if class is locked
     (function() {
@@ -4986,4 +5007,4 @@ console.log(`📁 Expecting ${TOTAL_QUESTIONS} answers`);
 console.log("✅ Active subjects for this exam:", ACTIVE_EXAM_SUBJECTS.join(", "));
 </script> 
 </body>
-</html> 
+</html>
